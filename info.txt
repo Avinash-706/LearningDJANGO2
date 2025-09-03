@@ -1,14 +1,99 @@
-1.template engine
+==============================
+DJANGO IMPORTANT BASICS
+ ==============================
 
-2. static keyword "{% static '' %}"
-    and load static
-
-3. in settings.py
-import os
-and  
-go to the STATIC_URL = 'static/'
-Then Make a new STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
-
-4. template engine : Jinja2 
-What is template engine and how does it works.
+ 1. WHAT IS UV
+ -------------
+ -> uv is a **Python package installer and environment manager**, similar to pip but **much faster**.  
+ -> It is written in **Rust**, making it extremely optimized and memory-efficient.  
+ -> Features:
+    - Creates virtual environments
+    - Installs packages faster than pip
+    - Compatible with existing pip workflows
+    - Handles dependency resolution efficiently
+ -> Example usage:
+    uv venv               -> Create virtual environment
+    uv pip install django -> Install Django inside uv environment
+ 
+ 
+ 2. TEMPLATE ENGINE
+ ------------------
+ -> A template engine is a tool that allows combining **backend data (Python code)** with **frontend HTML/CSS/JS**.  
+ -> In Django, template engines are used to render HTML pages dynamically with data passed from views.  
+ 
+ -> Workflow:
+    1. Backend (views.py) passes data as a dictionary (called **context**)  
+    2. Template engine takes HTML + context data  
+    3. Final dynamic HTML page is generated and sent to browser  
+ 
+ -> Django supports multiple template engines:
+    - Django Template Language (DTL)
+    - Jinja2 (faster and flexible)
+    - Others can be configured
+ 
+ 
+ 3. STATIC KEYWORD
+ -----------------
+ -> {% static '' %} is a **template tag** used in Django to link static files like CSS, JavaScript, or images.  
+ -> Example:
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <img src="{% static 'images/logo.png' %}" alt="Logo">
+ 
+ -> {% load static %}  
+    - Must be written at the top of the template to enable static file handling  
+    - It tells Django to include the "static" template tag library
+ 
+ 
+ 4. STATIC FILES SETTINGS
+ ------------------------
+ -> In settings.py, configure static files:
+ 
+    import os
+ 
+    STATIC_URL = 'static/'  
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  
+ 
+ -> Explanation:
+    - STATIC_URL : URL endpoint to access static files in templates  
+    - STATICFILES_DIRS : List of directories where Django will look for static files in development mode  
+    - BASE_DIR : The root directory of the project (auto-defined in settings.py)  
+ 
+ -> Folder structure:
+    project/
+    ├── static/
+    │   ├── css/
+    │   │   └── style.css
+    │   └── js/
+    │       └── script.js
+    └── templates/
+        └── index.html
+ 
+ 
+ 5. TEMPLATE ENGINE : JINJA2
+ ---------------------------
+ -> Jinja2 is an alternative template engine supported by Django.  
+ -> Features:
+    - **Faster** than Django Template Language (DTL)  
+    - Syntax is similar but more **Pythonic**  
+    - More flexible (supports macros, filters, expressions)  
+ 
+ -> Example (Jinja2 vs DTL):
+    DTL:
+      {% for user in users %}
+         <p>{{ user.name }}</p>
+      {% endfor %}
+ 
+    Jinja2:
+      {% for user in users -%}
+         <p>{{ user.name }}</p>
+      {% endfor %}
+ 
+ -> Jinja2 Advantages:
+    ✔ Faster rendering speed  
+    ✔ More powerful filters and expressions  
+    ✔ Better integration for complex projects  
+ 
+ -> Use case:
+    - By default, Django uses DTL  
+    - But Jinja2 can be enabled for projects requiring performance and advanced templating
