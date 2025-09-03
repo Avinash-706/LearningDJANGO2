@@ -1,0 +1,14 @@
+1.template engine
+
+2. static keyword "{% static '' %}"
+    and load static
+
+3. in settings.py
+import os
+and  
+go to the STATIC_URL = 'static/'
+Then Make a new STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+
+4. template engine : Jinja2 
+What is template engine and how does it works.
