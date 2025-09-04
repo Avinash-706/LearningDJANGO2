@@ -2,6 +2,7 @@
 DJANGO IMPORTANT BASICS
  ==============================
 
+
  1. WHAT IS UV
  -------------
  -> uv is a **Python package installer and environment manager**, similar to pip but **much faster**.  
@@ -16,6 +17,7 @@ DJANGO IMPORTANT BASICS
     uv pip install django -> Install Django inside uv environment
  
  
+
  2. TEMPLATE ENGINE
  ------------------
  -> A template engine is a tool that allows combining **backend data (Python code)** with **frontend HTML/CSS/JS**.  
@@ -32,6 +34,7 @@ DJANGO IMPORTANT BASICS
     - Others can be configured
  
  
+
  3. STATIC KEYWORD
  -----------------
  -> {% static '' %} is a **template tag** used in Django to link static files like CSS, JavaScript, or images.  
@@ -45,6 +48,7 @@ DJANGO IMPORTANT BASICS
     - It tells Django to include the "static" template tag library
  
  
+
  4. STATIC FILES SETTINGS
  ------------------------
  -> In settings.py, configure static files:
@@ -69,6 +73,7 @@ DJANGO IMPORTANT BASICS
     └── templates/
         └── index.html
  
+
  
  5. TEMPLATE ENGINE : JINJA2
  ---------------------------
@@ -97,3 +102,135 @@ DJANGO IMPORTANT BASICS
  -> Use case:
     - By default, Django uses DTL  
     - But Jinja2 can be enabled for projects requiring performance and advanced templating
+
+
+
+ 6. REGISTERING MODEL IN ADMIN PANEL
+ -----------------------------------
+ -> To manage models in Django’s admin interface, we must register them.  
+ -> Example:
+      from django.contrib import admin
+      from .models import ChaiVariety
+ 
+      admin.site.register(ChaiVariety)
+ 
+ -> STEPS TO USE ADMIN:
+    1. Create a superuser (admin account):
+         python manage.py createsuperuser
+         (enter username, email, password)
+ 
+    2. Run the server:
+         python manage.py runserver
+ 
+    3. Visit:
+         http://127.0.0.1:8000/admin/
+ 
+    4. Login with superuser credentials
+ 
+    5. Now the registered model (ChaiVariety) will appear in the admin panel for **CRUD operations**.
+ 
+ -> We can also customize admin with **ModelAdmin**:
+      class ChaiVarietyAdmin(admin.ModelAdmin):
+          list_display = ('name', 'price', 'available')
+      admin.site.register(ChaiVariety, ChaiVarietyAdmin)
+ 
+ 
+ 7. USING TAILWIND CSS WITH DJANGO
+ ---------------------------------
+ -> For Tailwind integration, add the following in settings.py:
+ 
+    INSTALLED_APPS = [
+        'tailwind',
+        'theme',
+        ...
+    ]
+ 
+    TAILWIND_APP_NAME = 'theme'
+    INTERNAL_IPS = ['127.0.0.1']
+ 
+ -> In template:
+    {% load static tailwind_tags %}   -> at the top  
+    {% tailwind_css %}               -> at the bottom  
+ 
+ -> Commands to set up Tailwind:
+    python manage.py tailwind init        -> Initialize Tailwind project
+    python manage.py tailwind install     -> Install dependencies
+    python manage.py tailwind build       -> Build CSS
+    python manage.py tailwind start       -> Start watching for changes
+ 
+ 
+ 8. DYNAMIC URLS & get_object_or_404
+ -----------------------------------
+ -> Example function in views.py:
+      from django.shortcuts import get_object_or_404, render
+      from .models import ChaiVariety
+ 
+      def chai_detail(request, chai_id):
+          chai = get_object_or_404(ChaiVariety, pk=chai_id)
+          return render(request, 'chai/chai_detail.html', {'chai': chai})
+ 
+ -> URL mapping in urls.py:
+      path('<int:chai_id>/', views.chai_detail, name="chai_detail")
+ 
+ -> Explanation:
+    - <int:chai_id> : Captures an integer from URL and passes it as chai_id  
+    - get_object_or_404 : Fetches object from DB, if not found → returns 404 error  
+    - 'chai' : key to pass data to template  
+ 
+ -> In template:
+      <a href="{% url 'chai_detail' i.id %}">
+    - {% url 'chai_detail' i.id %} generates a dynamic link for each chai item  
+ 
+ 
+ 9. STATIC FILES VS MEDIA FILES
+ ------------------------------
+ -> STATIC FILES:
+    - Files that **don’t change** during runtime
+    - Examples: CSS, JS, images for UI
+    - Settings:
+        STATIC_URL = 'static/'
+        STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+ 
+ -> MEDIA FILES:
+    - Files **uploaded by users/admin**
+    - Examples: Profile pictures, documents, product images
+    - Settings:
+        MEDIA_URL = '/media/'
+        MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+ 
+ -> To serve media files during development:
+    Add this in urls.py:
+        from django.conf import settings
+        from django.conf.urls.static import static
+ 
+        urlpatterns = [
+            ...
+        ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+ 
+ 
+ 10. IMAGE FIELD IN DJANGO MODEL
+ -------------------------------
+ -> To store images in Django models, use **ImageField**:
+      from django.db import models
+ 
+      class Profile(models.Model):
+          name = models.CharField(max_length=100)
+          profile_pic = models.ImageField(upload_to='profile_pics/')
+ 
+ -> Explanation:
+    - upload_to='profile_pics/' : Uploaded images stored in MEDIA_ROOT/profile_pics/
+ 
+ -> Settings required:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+ 
+ -> Commands needed:
+    1. Install Pillow (required for image processing)
+         pip install Pillow
+ 
+    2. Make migrations:
+         python manage.py makemigrations
+         python manage.py migrate
+ 
+ -> Usage in template:
+      <img src="{{ user.profile_pic.url }}" alt="Profile Picture">
