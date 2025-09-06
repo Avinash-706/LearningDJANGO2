@@ -1,0 +1,38 @@
+{% extends "layout.html" %} 
+
+{% block title %} 
+Forms 
+{% endblock %}
+
+{% block content %}
+
+<div class="first min-h-screen flex flex-col items-center justify-start py-10">
+    <!-- Professional Heading -->
+    <div class="text-center mb-8">
+        <h2 class="text-4xl font-bold text-orange-600">Forms</h2>
+        <p class="text-gray-500 mt-2">Fill in the details below</p>
+    </div>
+
+    <!-- Form Container -->
+    <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+        <form method="GET" class="space-y-4">
+            <div>
+                <label for="num1" class="block text-gray-700 font-medium mb-1">Value1</label>
+                <input type="text" name="num1" id="num1" class="w-full text-black border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400" />
+            </div>
+            <div>
+                <label for="num2" class="block text-gray-700 font-medium mb-1">Value2</label>
+                <input type="text" name="num2" id="num2" class="w-full text-black border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400" />
+            </div>
+            <div class="pt-3">
+                <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200">Save</button>
+            </div>
+             <div class="mt-4">
+                <label class="block text-gray-700 font-medium mb-1">Output:</label>
+                <input type="text" value="{{total}}" class="w-full bg-gray-400 text-gray-900 font-semibold py-2 px-4 rounded-md" readonly/>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

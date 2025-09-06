@@ -1,8 +1,7 @@
-html{
+html {
     background-color: rgb(28, 28, 95) !important;
-    color : white;
-        height: 100%;              /* full height of viewport */
-
+    color: white;
+    min-height: 100vh;   /* full height of viewport */
 }
 
 h1{

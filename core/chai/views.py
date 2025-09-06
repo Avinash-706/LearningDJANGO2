@@ -12,3 +12,15 @@ def all_chai(request):
 def chai_detail(request, chai_id):
     chai = get_object_or_404(ChaiVariety, pk = chai_id)
     return render(request, 'chai/chai_detail.html', {'chai' : chai})
+
+
+#form
+def userFormGET(request):
+    sum = 0
+    try:
+        n1 = int(request.GET['num1'])
+        n2 = int(request.GET['num2'])
+        sum = n1 + n2
+    except:
+        sum = "Kuch Bhi ?"
+    return render(request, 'chai/user_form.html', {"total":sum})

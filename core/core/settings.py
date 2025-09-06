@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'chai',
     'tailwind',
     'theme',
+    'livereload',
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -54,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'livereload.middleware.LiveReloadScript',
+
 ]
 
 ROOT_URLCONF = 'core.urls'

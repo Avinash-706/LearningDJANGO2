@@ -234,3 +234,7 @@ DJANGO IMPORTANT BASICS
  
  -> Usage in template:
       <img src="{{ user.profile_pic.url }}" alt="Profile Picture">
+
+
+
+11. Difference between request.GET['num1'] vs request.GET.get('num1')
