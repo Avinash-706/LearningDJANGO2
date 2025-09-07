@@ -30,7 +30,7 @@ Forms
             </div> {% endcomment %}
 
             <div class="pt-3">
-                <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200">Save</button>
+                <button type="submit" class="cursor-pointer w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200">Save</button>
             </div>
 
             {% if output is not None and output != 0 %}
@@ -41,6 +41,47 @@ Forms
             {% endif %}
 
         </form>
+    </div>
+
+
+
+    <div class="w-full max-w-2xl bg-white p-6 rounded-lg shadow-md mt-10">
+        <h3 class="text-2xl font-bold text-orange-600 mb-4 text-center">Calculation History</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Value 1</th>
+                        <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Value 2</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Sum</th>
+                        {# NEW: Add a header for the action column #}
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    {% for calc in calculations %}
+                    <tr class="hover:bg-gray-100">
+                        <td class="w-1/3 text-left py-3 px-4">{{ calc.num1 }}</td>
+                        <td class="w-1/3 text-left py-3 px-4">{{ calc.num2 }}</td>
+                        <td class="text-left py-3 px-4">{{ calc.sum }}</td>
+                        {# NEW: Add the delete button form #}
+                        <td class="text-left py-3 px-4">
+                            <form action="{% url 'delete_calculation' calc.id %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" style="cursor: pointer;" class="text-red-500 hover:text-red-700 text-lg">
+                                    ⛔
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-3 px-4">No calculations yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

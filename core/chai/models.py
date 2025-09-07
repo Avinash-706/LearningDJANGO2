@@ -52,3 +52,14 @@ class ChaiCertificate(models.Model):
 
     def __str__(self):
         return f'Certificate For {self.chai.name}'
+    
+
+
+# forms
+class Calculation(models.Model):
+    num1 = models.IntegerField()
+    num2 = models.IntegerField()
+    sum = models.IntegerField()
+
+    def __str__(self):
+        return f"Calculation: {self.num1} + {self.num2} = {self.sum}"

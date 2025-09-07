@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import ChaiVariety
+from .models import ChaiVariety, Calculation
 from .forms import modelForm
 from django.shortcuts import get_object_or_404
 
@@ -19,25 +19,44 @@ def chai_detail(request, chai_id):
 
 #form
 def userForm(request):
-    sum = None
+    result = None
     fn = modelForm()
     data = {'form' : fn}
     try:
         if request.method == "POST":
-            # n1 = int(request.GET['num1'])
-            # n2 = int(request.GET['num2'])
+            form = modelForm(request.POST)
+            if  form.is_valid():
+                # n1 = int(request.GET['num1'])
+                # n2 = int(request.GET['num2'])
 
-            n1 = int(request.POST['num1'])
-            n2 = int(request.POST['num2'])
+                n1 = int(request.POST['num1'])
+                n2 = int(request.POST['num2'])
+
+                result = n1 + n2
+
+                record = Calculation(num1 = n1, num2 = n2, sum=result)
+                record.save()
 
 
-            sum = n1 + n2
-            data = {
-                'form' : fn,
-                'output' : sum
-            }
-            # return HttpResponseRedirect(("/chai/?output={}").format(sum))
+                # return HttpResponseRedirect(("/chai/?output={}").format(result))
 
     except:
-        sum = "Kuch Bhi ?"
+        result = "Kuch Bhi ?"
+    
+    
+    all_calculations = Calculation.objects.all()
+    data = {
+        'form' : fn,
+        'output' : result,
+        'calculations': all_calculations
+    }
+
     return render(request, 'chai/user_form.html', data)
+
+
+def delete_calculation(request, calc_id):
+    data = get_object_or_404(Calculation, id = calc_id)
+    if request.method == 'POST':
+        data.delete()
+    return redirect('/chai/form')
+
