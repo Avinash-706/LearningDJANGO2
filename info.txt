@@ -237,4 +237,98 @@ DJANGO IMPORTANT BASICS
 
 
 
-11. Difference between request.GET['num1'] vs request.GET.get('num1')
+ 11. DIFFERENCE BETWEEN request.GET['num1'] VS request.GET.get('num1')
+ --------------------------------------------------------------------
+ -> request.GET['num1']
+    - Direct dictionary-style access
+    - If 'num1' key is NOT present in the request → throws **KeyError**
+    - Example:
+         value = request.GET['num1']   # Crashes if num1 is missing
+ 
+ -> request.GET.get('num1')
+    - Safer way to access query parameters
+    - If 'num1' does NOT exist → returns **None** instead of crashing
+    - Can also provide a default value:
+         value = request.GET.get('num1', 0)
+ 
+ -> USAGE RULE:
+    - Use request.GET['key'] when you are SURE the parameter exists
+    - Use request.GET.get('key') when the parameter may/may not exist
+ 
+ 
+ 12. IMPLEMENTING GET, POST, REDIRECTS IN FORMS
+ ----------------------------------------------
+ -> Django supports multiple HTTP methods (GET, POST, PUT, DELETE)
+    but most commonly used in forms → **GET and POST**
+ 
+ -> EXAMPLE FORM (template):
+      <form method="POST" action="/chai/">
+          {% csrf_token %}
+          <input type="text" name="num1">
+          <input type="text" name="num2">
+          <button type="submit">Submit</button>
+      </form>
+ 
+ -> VIEWS (example):
+      from django.http import HttpResponseRedirect
+ 
+      def chai_sum(request):
+          if request.method == "POST":
+              num1 = int(request.POST.get('num1'))
+              num2 = int(request.POST.get('num2'))
+              total = num1 + num2
+              # Redirect with result
+              return HttpResponseRedirect(("/chai/?output={}").format(total))
+ 
+          return render(request, 'chai/form.html')
+ 
+ -> REDIRECTION:
+    - HttpResponseRedirect is used to send user to another URL
+    - Data can be passed as query params (?output=value)
+    - Example redirect URL:
+         /chai/?output=30
+ 
+ -> RETRIEVING DATA AFTER REDIRECT:
+      def result(request):
+          output = request.GET.get('output')
+          return render(request, 'chai/result.html', {'output': output})
+ 
+ 
+ 13. CSRF PROTECTION IN DJANGO
+ -----------------------------
+ -> CSRF = Cross-Site Request Forgery
+ -> It is an attack where a malicious website tricks a logged-in user
+    into performing unwanted actions on another site.
+ 
+ -> DJANGO’S CSRF PROTECTION:
+    - Django provides built-in **csrf_token** middleware
+    - Every POST form must include a hidden CSRF token field
+    - Example in template:
+         <form method="POST">
+             {% csrf_token %}
+             ...
+         </form>
+ 
+ -> HOW CSRF WORKS (Step-by-Step):
+    1. User visits a Django form page  
+       → Django generates a **unique CSRF token** for that session  
+ 
+    2. Token is embedded in the HTML form via `{% csrf_token %}`  
+ 
+    3. When the form is submitted (POST request)  
+       → Browser sends CSRF token along with request  
+ 
+    4. Django compares:
+         - Token in request header/body
+         - Token stored in session/cookie  
+ 
+    5. If both match → request is VALID  
+       If mismatch → Django raises **403 Forbidden (CSRF verification failed)**  
+ 
+ -> WORKFLOW (VISUALIZED):
+    [User Request] → [Form with CSRF token] → [Submit Form]  
+    → [CSRF token validated in backend] → [Accept or Reject request]
+ 
+ -> WHY IT’S IMPORTANT:
+    - Prevents attackers from forcing user actions unknowingly
+    - Protects sensitive operations like payments, form submissions, account changes

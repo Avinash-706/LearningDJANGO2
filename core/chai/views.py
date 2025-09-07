@@ -1,12 +1,14 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import ChaiVariety
 from django.shortcuts import get_object_or_404
 
 # Create your views here.
 def all_chai(request):
+    if(request.method == "GET"):
+        output = request.GET.get('output')
     chais = ChaiVariety.objects.all()
-    return render(request, 'chai/all_chai.html', {'chais' : chais}) 
+    return render(request, 'chai/all_chai.html', {'chais' : chais, 'output':output}) 
 
 
 def chai_detail(request, chai_id):
@@ -15,12 +17,21 @@ def chai_detail(request, chai_id):
 
 
 #form
-def userFormGET(request):
+def userForm(request):
     sum = 0
     try:
-        n1 = int(request.GET['num1'])
-        n2 = int(request.GET['num2'])
-        sum = n1 + n2
+        if request.method == "POST":
+            # n1 = int(request.GET['num1'])
+            # n2 = int(request.GET['num2'])
+
+            n1 = int(request.POST['num1'])
+            n2 = int(request.POST['num2'])
+
+
+            sum = n1 + n2
+
+            return HttpResponseRedirect(("/chai/?output={}").format(sum))
+
     except:
         sum = "Kuch Bhi ?"
     return render(request, 'chai/user_form.html', {"total":sum})
