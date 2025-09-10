@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+</head>
+<body>
+    <h2>All Books</h2>
+
+    <div>
+        {% if books %}
+            <ul>
+                {% for book in books %}
+                    <li>
+                        <b>{{ book.title }}</b> by {{ book.author }} -
+                        {{ book.genre }} - ${{ book.price }} -
+                        Published on {{ book.publication_date|date:"Y-m-d" }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No books available yet.</p>
+        {% endif %}
+    </div>
+
+
+    <div>
+        <h3>Find a Book</h3>
+        <form method="POST" action="{% url 'find' %}">
+            {% csrf_token %}
+            <label for="search_title">Name:</label>
+            <input type="text" name="search_title" id="search_title">
+            <button type="submit">Find</button>
+        </form>
+    </div>
+</body>
+</html>

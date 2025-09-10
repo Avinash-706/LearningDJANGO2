@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+</head>
+<body>
+    <h2>Search Results</h2>
+
+    <div>
+        {% if books %}
+            <ul type="disc">
+                {% for book in books %}
+                    <li>
+                        <b>{{ book.title }}</b> by {{ book.author }} -
+                        {{ book.genre }} - ${{ book.price }} -
+                        Published on {{ book.publication_date|date:"Y-m-d" }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <b>No matching books found.</b>
+        {% endif %}
+    </div> 
+    <br>
+    <a href="{% url 'explore' %}">Back to All Books</a>
+</body>
+</html>
