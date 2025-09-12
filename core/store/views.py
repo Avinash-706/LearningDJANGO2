@@ -16,3 +16,4 @@ def find(request):
             books = books.filter(title__icontains=search_title)
 
     return render(request, 'book_list.html', {'books': books})
+
